@@ -22,7 +22,11 @@
     --violet: #a78bfa;
     --pink: #f472b6;
     --amber: #fbbf24;
-    --radius: 16px;
+    --radius: 2px;
+    --u-tab: #0a0f12;
+    --u-head: #151e22;
+    --u-field: #070b0d;
+    --u-sel: #ff9a1f;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -72,7 +76,7 @@
   .hero { padding: 110px 0 90px; }
   .tag {
     display: inline-flex; align-items: center; gap: 8px;
-    padding: 6px 14px; border: 1px solid var(--line); border-radius: 999px;
+    padding: 6px 14px; border: 1px solid var(--line); border-radius: 3px;
     color: var(--teal); font-size: .85rem; background: rgba(45,212,191,.06);
   }
   .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 12px var(--teal); animation: pulse 2s infinite; }
@@ -87,7 +91,7 @@
   .actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
   .btn {
     display: inline-flex; align-items: center; gap: 8px;
-    padding: 12px 22px; border-radius: 12px; font-weight: 500; transition: transform .2s, box-shadow .2s, border-color .2s;
+    padding: 12px 22px; border-radius: 4px; font-weight: 500; transition: transform .2s, box-shadow .2s, border-color .2s;
   }
   .btn.primary { background: var(--teal); color: #031312; }
   .btn.primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(45,212,191,.3); }
@@ -102,76 +106,160 @@
   .about { display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; align-items: start; }
   .about p { color: var(--muted); margin-bottom: 16px; font-size: 1.05rem; }
   .about p strong { color: var(--text); font-weight: 500; }
-  .facts { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
-  .facts li { list-style: none; display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px dashed var(--line); font-size: .95rem; }
-  .facts li:last-child { border-bottom: 0; }
-  .facts li span:first-child { color: var(--muted); }
-  .facts li span:last-child { text-align: right; }
 
-  /* tecnologías */
-  .skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
-  .skill {
-    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px;
-    position: relative; overflow: hidden; transition: border-color .2s, transform .2s;
+  /* ===== Ventanas al estilo del editor de Unity ===== */
+  .ico { width: 14px; height: 14px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+  .u-win { background: var(--card); border: 1px solid var(--line); box-shadow: 0 18px 40px -24px rgba(0,0,0,.9); }
+  .u-tabs {
+    display: flex; align-items: flex-end; gap: 2px; height: 30px; padding: 0 4px;
+    background: var(--u-tab); border-bottom: 1px solid var(--line); font-size: .78rem;
   }
-  .skill:hover { border-color: var(--c); transform: translateY(-3px); }
-  .skill::after { content: ""; position: absolute; left: 0; top: 0; height: 3px; width: 100%; background: var(--c); }
-  .skill h3 { font-size: 1.2rem; }
-  .skill p { color: var(--muted); font-size: .9rem; margin: 4px 0 16px; }
-  .bar { height: 6px; border-radius: 6px; background: var(--line); overflow: hidden; }
-  .bar i { display: block; height: 100%; width: var(--lvl); background: var(--c); border-radius: 6px; }
-  .learning { font-size: .75rem; color: var(--c); border: 1px solid var(--c); border-radius: 999px; padding: 2px 8px; margin-left: 8px; vertical-align: middle; }
+  .u-tab {
+    display: flex; align-items: center; gap: 6px; height: 26px; padding: 0 12px;
+    color: var(--muted); border: 1px solid transparent; border-bottom: 0; white-space: nowrap;
+  }
+  .u-tab.on {
+    height: 29px; margin-bottom: -1px; color: var(--text); background: var(--card);
+    border-color: var(--line); box-shadow: inset 0 2px 0 var(--teal);
+  }
+  .u-menu { margin-left: auto; align-self: center; display: flex; gap: 10px; align-items: center; color: var(--muted); padding: 0 6px; font-size: .8rem; }
+  .u-body { padding: 14px; }
+  .u-field {
+    display: inline-flex; align-items: center; gap: 6px; min-height: 24px; padding: 2px 8px;
+    background: var(--u-field); border: 1px solid var(--line); border-radius: 2px;
+    color: var(--text); font-size: .85rem;
+  }
+  .u-drop::after { content: "▾"; margin-left: auto; padding-left: 8px; color: var(--muted); }
+  .u-check { width: 14px; height: 14px; flex: none; border: 1px solid #3a4a50; background: var(--u-field); border-radius: 2px; display: grid; place-items: center; font-size: 10px; line-height: 1; color: var(--teal); }
+  .u-check::after { content: "✓"; }
+  .tri { color: var(--muted); font-size: .65rem; width: 10px; flex: none; }
 
-  /* proyectos */
+  /* inspector: cabecera del GameObject */
+  .u-obj { display: flex; align-items: center; gap: 8px; }
+  .u-obj > .ico { width: 30px; height: 30px; color: var(--cyan); stroke-width: 1; }
+  .u-obj .u-field { flex: 1; min-width: 0; }
+  .u-static { font-size: .8rem; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+  .u-tagrow { display: grid; grid-template-columns: auto 1fr auto 1fr; gap: 8px; align-items: center; margin: 10px 0 14px 38px; font-size: .8rem; color: var(--muted); }
+  .u-tagrow .u-field { font-size: .8rem; }
+
+  /* inspector: componente */
+  .u-comp { border-top: 1px solid var(--line); }
+  .u-comp-h {
+    display: flex; align-items: center; gap: 8px; padding: 7px 8px; font-size: .88rem; font-weight: 500;
+    background: var(--u-head); border-bottom: 1px solid var(--line);
+  }
+  .u-comp-h .ico { color: var(--c, var(--teal)); }
+  .u-prop { display: grid; grid-template-columns: 96px 1fr; gap: 10px; align-items: center; padding: 6px 8px 6px 26px; font-size: .88rem; }
+  .u-prop label { color: var(--muted); }
+  .u-prop .u-field { justify-content: flex-start; }
+
+  /* tecnologías: cada una es un componente con su slider */
+  .skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+  .skill { border: 1px solid var(--line); background: var(--bg-2); transition: border-color .2s, transform .2s; }
+  .skill:hover { border-color: var(--c); transform: translateY(-3px); }
+  .skill .u-comp-h { box-shadow: inset 2px 0 0 var(--c); }
+  .skill .u-prop { grid-template-columns: 48px 1fr; padding-left: 12px; }
+  .skill .uso { color: var(--muted); font-size: .85rem; line-height: 1.4; }
+  .u-slider { display: grid; grid-template-columns: 1fr 46px; gap: 10px; align-items: center; }
+  .u-slider .track { position: relative; height: 3px; background: var(--line); }
+  .u-slider .track i { position: absolute; left: 0; top: 0; bottom: 0; width: var(--lvl); background: var(--c); }
+  .u-slider .track b { position: absolute; top: 50%; left: var(--lvl); width: 11px; height: 11px; transform: translate(-50%, -50%); background: #cfd8da; border: 1px solid #000; border-radius: 50%; }
+  .u-slider .u-field { justify-content: center; padding: 0 4px; font-size: .78rem; }
+  .learning { font-size: .7rem; color: var(--c); border: 1px solid var(--c); border-radius: 2px; padding: 0 6px; font-weight: 400; }
+
+  /* proyectos: vista de escena con gizmos */
   .projects { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px; }
   .project {
-    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
+    background: var(--card); border: 1px solid var(--line); overflow: hidden;
     display: flex; flex-direction: column; transition: transform .25s, border-color .25s, box-shadow .25s;
   }
   .project:hover { transform: translateY(-5px); border-color: var(--c); box-shadow: 0 16px 40px -18px var(--c); }
   .thumb {
-    height: 170px; display: grid; place-items: center; position: relative;
-    background: radial-gradient(circle at 30% 30%, var(--c), transparent 70%), var(--bg-2);
+    height: 180px; display: grid; place-items: center; position: relative; overflow: hidden;
+    background:
+      radial-gradient(circle at 50% 55%, color-mix(in srgb, var(--c) 45%, transparent), transparent 62%),
+      linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px) 0 0 / 22px 22px,
+      linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px) 0 0 / 22px 22px,
+      var(--bg-2);
   }
-  .thumb svg { width: 64px; height: 64px; stroke: #fff; opacity: .92; }
-  .thumb .app-icon { width: 124px; height: 124px; border-radius: 28px; object-fit: cover; object-position: 50% 62%; border: 1px solid rgba(255,255,255,.18); box-shadow: 0 14px 30px -10px rgba(0,0,0,.8); transition: transform .25s; }
-  .project:hover .app-icon { transform: scale(1.06) rotate(-3deg); }
-  .status { position: absolute; top: 14px; right: 14px; font-size: .75rem; padding: 4px 10px; border-radius: 999px; background: rgba(0,0,0,.55); border: 1px solid rgba(255,255,255,.15); }
-  .project .body { padding: 22px; display: flex; flex-direction: column; flex: 1; }
+  .thumb .gizmo { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .thumb .axes { position: absolute; top: 8px; right: 10px; width: 44px; height: 44px; }
+  .thumb .persp { position: absolute; top: 52px; right: 13px; font-size: .65rem; color: var(--muted); }
+  .sel { position: relative; display: grid; place-items: center; outline: 1.5px solid var(--u-sel); outline-offset: 7px; }
+  .sel::after {
+    content: ""; position: absolute; inset: -10px; pointer-events: none;
+    background:
+      linear-gradient(var(--u-sel), var(--u-sel)) top left / 6px 6px no-repeat,
+      linear-gradient(var(--u-sel), var(--u-sel)) top right / 6px 6px no-repeat,
+      linear-gradient(var(--u-sel), var(--u-sel)) bottom left / 6px 6px no-repeat,
+      linear-gradient(var(--u-sel), var(--u-sel)) bottom right / 6px 6px no-repeat;
+  }
+  .thumb .sel > svg { width: 64px; height: 64px; stroke: #fff; opacity: .92; }
+  .thumb .app-icon { width: 112px; height: 112px; border-radius: 4px; object-fit: cover; object-position: 50% 62%; display: block; transition: transform .25s; }
+  .project:hover .app-icon { transform: scale(1.05); }
+  .status { position: absolute; top: 10px; left: 10px; z-index: 1; font-size: .72rem; padding: 3px 8px; border-radius: 2px; background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.15); }
+  .project .body { padding: 18px 20px 22px; display: flex; flex-direction: column; flex: 1; border-top: 1px solid var(--line); }
+  .project .comp-name { display: flex; align-items: center; gap: 8px; font-size: .75rem; color: var(--muted); margin-bottom: 8px; }
+  .project .comp-name .ico { color: var(--c); }
   .project h3 { font-size: 1.25rem; margin-bottom: 8px; }
   .project p { color: var(--muted); font-size: .95rem; flex: 1; }
   .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0; }
-  .chip { font-size: .78rem; padding: 4px 10px; border-radius: 8px; background: rgba(45,212,191,.08); color: var(--teal); border: 1px solid rgba(45,212,191,.2); }
+  .chip { font-size: .78rem; padding: 3px 9px; border-radius: 2px; background: rgba(45,212,191,.08); color: var(--teal); border: 1px solid rgba(45,212,191,.2); }
   .project a.link { color: var(--c); font-weight: 500; font-size: .95rem; }
   .project a.link:hover { text-decoration: underline; }
   .links { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
   .btn-apk {
-    font-size: .85rem; font-weight: 600; padding: 8px 14px; border-radius: 10px;
+    font-size: .85rem; font-weight: 600; padding: 8px 14px; border-radius: 3px;
     background: var(--c); color: #031312; transition: transform .2s, box-shadow .2s;
   }
   .btn-apk:hover { transform: translateY(-2px); box-shadow: 0 8px 22px -8px var(--c); }
 
-  /* formación */
-  .timeline { position: relative; padding-left: 30px; }
-  .timeline::before { content: ""; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 2px; background: linear-gradient(var(--teal), var(--violet)); }
-  .step { position: relative; margin-bottom: 34px; }
-  .step::before { content: ""; position: absolute; left: -30px; top: 6px; width: 16px; height: 16px; border-radius: 50%; background: var(--bg); border: 3px solid var(--teal); }
-  .step .when { color: var(--teal); font-size: .85rem; }
-  .step h3 { font-size: 1.2rem; margin: 2px 0; }
-  .step p { color: var(--muted); }
+  /* formación: ventana Hierarchy */
+  .hier { max-width: 780px; }
+  .u-search { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-bottom: 1px solid var(--line); font-size: .8rem; color: var(--muted); }
+  .u-search .u-field { flex: 1; color: var(--muted); border-radius: 12px; }
+  .tree { list-style: none; padding: 6px 0 10px; }
+  .tree li { display: flex; align-items: center; gap: 7px; padding: 5px 12px; font-size: .95rem; }
+  .tree li .ico { color: var(--muted); }
+  .tree .root { font-weight: 500; background: var(--u-head); border-bottom: 1px solid var(--line); margin-bottom: 4px; }
+  .tree .root .ico { color: var(--text); }
+  .tree .l1 { padding-left: 30px; font-weight: 500; }
+  .tree .l1 .ico { color: var(--cyan); }
+  .tree .l2 { padding-left: 64px; color: var(--muted); font-size: .9rem; }
+  .tree .on { background: rgba(45,212,191,.16); box-shadow: inset 2px 0 0 var(--teal); }
+  .tree .when { margin-left: auto; padding-left: 12px; color: var(--teal); font-size: .78rem; white-space: nowrap; }
 
-  /* qué busco */
-  .goals { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
-  .goal { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; }
-  .goal .ico { font-size: 1.8rem; }
-  .goal h3 { margin: 10px 0 6px; }
+  /* qué busco: ventana Project con assets */
+  .u-crumbs { padding: 8px 14px; border-bottom: 1px solid var(--line); font-size: .78rem; color: var(--muted); }
+  .u-crumbs b { color: var(--text); font-weight: 500; }
+  .goals { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; padding: 16px; }
+  .goal { position: relative; background: var(--bg-2); border: 1px solid var(--line); padding: 22px; transition: border-color .2s; }
+  .goal::after {
+    content: ""; position: absolute; inset: -4px; pointer-events: none; opacity: 0; transition: opacity .2s;
+    outline: 1.5px solid var(--u-sel);
+    background:
+      linear-gradient(var(--u-sel), var(--u-sel)) top left / 6px 6px no-repeat,
+      linear-gradient(var(--u-sel), var(--u-sel)) top right / 6px 6px no-repeat,
+      linear-gradient(var(--u-sel), var(--u-sel)) bottom left / 6px 6px no-repeat,
+      linear-gradient(var(--u-sel), var(--u-sel)) bottom right / 6px 6px no-repeat;
+  }
+  .goal:hover::after { opacity: 1; }
+  .goal .gz { width: 44px; height: 44px; stroke-width: 1.1; }
+  .goal .file { display: block; margin-top: 8px; font-size: .72rem; color: var(--muted); }
+  .goal h3 { margin: 6px 0 6px; }
   .goal p { color: var(--muted); font-size: .95rem; }
 
-  /* contacto */
-  .contact {
-    text-align: center; background: linear-gradient(135deg, rgba(45,212,191,.12), rgba(167,139,250,.10));
-    border: 1px solid var(--line); border-radius: 24px; padding: 60px 24px;
-  }
+  /* contacto: ventana Game con barra de Play */
+  .u-play { display: flex; justify-content: center; gap: 2px; margin-bottom: 10px; }
+  .u-play span { width: 34px; height: 24px; display: grid; place-items: center; background: var(--u-tab); border: 1px solid var(--line); color: var(--muted); }
+  .u-play span.on { color: var(--teal); background: rgba(45,212,191,.12); border-color: rgba(45,212,191,.35); }
+  .u-play .ico { width: 12px; height: 12px; fill: currentColor; stroke: none; }
+  .u-toolbar { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; padding: 6px 10px; border-bottom: 1px solid var(--line); font-size: .76rem; color: var(--muted); }
+  .u-toolbar .u-field { font-size: .76rem; min-height: 20px; color: var(--muted); }
+  .u-toolbar .scale { display: flex; align-items: center; gap: 8px; }
+  .u-toolbar .scale i { width: 60px; height: 2px; background: var(--line); position: relative; }
+  .u-toolbar .scale i::after { content: ""; position: absolute; left: 0; top: -4px; width: 9px; height: 9px; border-radius: 50%; background: #cfd8da; }
+  .contact { text-align: center; background: linear-gradient(135deg, rgba(45,212,191,.12), rgba(167,139,250,.10)); padding: 54px 24px; }
   .contact h2 { margin-bottom: 12px; }
   .contact p { color: var(--muted); margin-bottom: 30px; }
   .contact .actions { justify-content: center; }
@@ -185,6 +273,10 @@
   @media (max-width: 760px) {
     nav ul { display: none; }
     .about { grid-template-columns: 1fr; }
+    .u-tagrow { margin-left: 0; }
+    .u-prop { grid-template-columns: 80px 1fr; padding-left: 8px; }
+    .tree .when { display: none; }
+    .tree .l2 { padding-left: 48px; }
     .hero { padding: 70px 0 50px; }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -222,6 +314,29 @@
 </header>
 
 <main>
+  <!-- iconos al estilo del editor de Unity -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-cube" viewBox="0 0 16 16"><path d="M8 1.5 14 4.8v6.4L8 14.5 2 11.2V4.8zM2 4.8l6 3.3 6-3.3M8 8.1v6.4"/></symbol>
+    <symbol id="i-info" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.2"/><path d="M8 7.2v4M8 4.8v.1"/></symbol>
+    <symbol id="i-light" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.6"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.4 3.4l1.4 1.4M11.2 11.2l1.4 1.4M3.4 12.6l1.4-1.4M11.2 4.8l1.4-1.4"/></symbol>
+    <symbol id="i-hier" viewBox="0 0 16 16"><path d="M2 3.5h12M6 8h8M6 12.5h8M3.5 3.5v9M3.5 8H5M3.5 12.5H5"/></symbol>
+    <symbol id="i-scene" viewBox="0 0 16 16"><path d="M5.5 2v12M10.5 2v12M2 5.5h12M2 10.5h12"/></symbol>
+    <symbol id="i-game" viewBox="0 0 16 16"><path d="M4 5.5h8a3 3 0 0 1 3 3v.5a2 2 0 0 1-3.6 1.2L10.5 9h-5l-.9 1.2A2 2 0 0 1 1 9v-.5a3 3 0 0 1 3-3zM4.5 7v2.4M3.3 8.2h2.4"/></symbol>
+    <symbol id="i-script" viewBox="0 0 16 16"><path d="M4 1.5h6l3 3v10H4zM10 1.5v3h3M6.5 8h4M6.5 11h4"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 16 16"><path d="M1.5 3.5h5L8 5h6.5v8h-13z"/></symbol>
+    <symbol id="i-console" viewBox="0 0 16 16"><path d="M1.5 2.5h13v11h-13zM4 6l2 2-2 2M8 10h4"/></symbol>
+    <symbol id="i-bulb" viewBox="0 0 16 16"><path d="M8 1.5a4.5 4.5 0 0 0-2.6 8.2V12h5.2V9.7A4.5 4.5 0 0 0 8 1.5zM6 14.5h4M6.8 12V9.5M9.2 12V9.5"/></symbol>
+    <symbol id="i-cam" viewBox="0 0 16 16"><path d="M1.5 5h9v6.5h-9zM10.5 7.3l4-2v6l-4-2"/><circle cx="4" cy="3.4" r="1.4"/><circle cx="7.7" cy="3.4" r="1.4"/></symbol>
+    <symbol id="i-play" viewBox="0 0 16 16"><path d="M4 2.5v11l9-5.5z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 16 16"><path d="M3.5 2.5h3v11h-3zM9.5 2.5h3v11h-3z"/></symbol>
+    <symbol id="i-step" viewBox="0 0 16 16"><path d="M2.5 2.5v11l7.5-5.5zM11 2.5h2.5v11H11z"/></symbol>
+    <symbol id="i-axes" viewBox="0 0 44 44">
+      <path d="M22 22 L36 28" stroke="#f05454" stroke-width="2.4"/><path d="M22 22 L22 6" stroke="#7fd35a" stroke-width="2.4"/><path d="M22 22 L9 28" stroke="#4c8dff" stroke-width="2.4"/>
+      <circle cx="36" cy="28" r="3.6" fill="#f05454"/><circle cx="22" cy="6" r="3.6" fill="#7fd35a"/><circle cx="9" cy="28" r="3.6" fill="#4c8dff"/>
+      <rect x="18.5" y="18.5" width="7" height="7" fill="#cfd8da" stroke="none"/>
+    </symbol>
+  </svg>
+
   <section id="sobre-mi" class="wrap reveal">
     <div class="eyebrow mono">// sobre mí</div>
     <h2>Tecnología con propósito</h2>
@@ -232,35 +347,54 @@
         <p>En todos mis proyectos trabajo con <strong>IA como asistente de desarrollo</strong> (Claude): me ayuda a avanzar más rápido y a aprender, pero las decisiones y el código final son míos.</p>
         <p>Busco un primer empleo donde seguir aprendiendo en equipo, idealmente en el mundo de los <strong>videojuegos</strong> o de la <strong>inteligencia artificial</strong>.</p>
       </div>
-      <ul class="facts">
-        <li><span>Nombre</span><span>Hugo Rejas Fernández</span></li>
-        <li><span>Estudios</span><span>2º DAM</span></li>
-        <li><span>Centro</span><span>IES Donoso Cortés</span></li>
-        <li><span>Ubicación</span><span>Badajoz, Extremadura</span></li>
-        <li><span>Intereses</span><span>Videojuegos · IA</span></li>
-      </ul>
+      <div class="u-win">
+        <div class="u-tabs"><span class="u-tab on"><svg class="ico"><use href="#i-info"/></svg>Inspector</span><span class="u-tab"><svg class="ico"><use href="#i-light"/></svg>Lighting</span><span class="u-menu">⋮</span></div>
+        <div class="u-body">
+          <div class="u-obj"><svg class="ico"><use href="#i-cube"/></svg><span class="u-check"></span><span class="u-field">Hugo</span><span class="u-static">Static <span class="u-check"></span></span></div>
+          <div class="u-tagrow"><span>Tag</span><span class="u-field u-drop">Developer</span><span>Layer</span><span class="u-field u-drop">Default</span></div>
+          <div class="u-comp">
+            <div class="u-comp-h"><span class="tri">▼</span><svg class="ico"><use href="#i-script"/></svg><span class="u-check"></span>Perfil (Script)<span class="u-menu">⋮</span></div>
+            <div class="u-prop"><label>Nombre</label><span class="u-field">Hugo Rejas Fernández</span></div>
+            <div class="u-prop"><label>Estudios</label><span class="u-field">2º DAM</span></div>
+            <div class="u-prop"><label>Centro</label><span class="u-field">IES Donoso Cortés</span></div>
+            <div class="u-prop"><label>Ubicación</label><span class="u-field">Badajoz, Extremadura</span></div>
+            <div class="u-prop"><label>Intereses</label><span class="u-field u-drop">Videojuegos · IA</span></div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
   <section id="tecnologias" class="wrap reveal">
     <div class="eyebrow mono">// tecnologías</div>
     <h2>Con qué trabajo</h2>
-    <div class="skills">
-      <div class="skill" style="--c: var(--amber); --lvl: 80%">
-        <h3>Java</h3><p>Programación orientada a objetos</p>
-        <div class="bar"><i></i></div>
-      </div>
-      <div class="skill" style="--c: var(--violet); --lvl: 75%">
-        <h3>Kotlin</h3><p>Desarrollo de apps Android</p>
-        <div class="bar"><i></i></div>
-      </div>
-      <div class="skill" style="--c: var(--cyan); --lvl: 75%">
-        <h3>SQL</h3><p>Diseño y consulta de bases de datos</p>
-        <div class="bar"><i></i></div>
-      </div>
-      <div class="skill" style="--c: var(--pink); --lvl: 35%">
-        <h3>C# <span class="learning mono">aprendiendo</span></h3><p>Videojuegos con Unity</p>
-        <div class="bar"><i></i></div>
+    <div class="u-win">
+      <div class="u-tabs"><span class="u-tab on"><svg class="ico"><use href="#i-info"/></svg>Inspector</span><span class="u-menu">🔒 ⋮</span></div>
+      <div class="u-body">
+        <div class="u-obj"><svg class="ico"><use href="#i-cube"/></svg><span class="u-check"></span><span class="u-field">Tecnologías</span><span class="u-static">Static <span class="u-check"></span></span></div>
+        <div class="u-tagrow"><span>Tag</span><span class="u-field u-drop">Skills</span><span>Layer</span><span class="u-field u-drop">Default</span></div>
+        <div class="skills">
+          <div class="skill" style="--c: var(--amber); --lvl: 80%">
+            <div class="u-comp-h"><span class="tri">▼</span><svg class="ico"><use href="#i-script"/></svg><span class="u-check"></span>Java<span class="u-menu">⋮</span></div>
+            <div class="u-prop"><label>Uso</label><span class="uso">Programación orientada a objetos</span></div>
+            <div class="u-prop"><label>Nivel</label><span class="u-slider"><span class="track"><i></i><b></b></span><span class="u-field mono">0.80</span></span></div>
+          </div>
+          <div class="skill" style="--c: var(--violet); --lvl: 75%">
+            <div class="u-comp-h"><span class="tri">▼</span><svg class="ico"><use href="#i-script"/></svg><span class="u-check"></span>Kotlin<span class="u-menu">⋮</span></div>
+            <div class="u-prop"><label>Uso</label><span class="uso">Desarrollo de apps Android</span></div>
+            <div class="u-prop"><label>Nivel</label><span class="u-slider"><span class="track"><i></i><b></b></span><span class="u-field mono">0.75</span></span></div>
+          </div>
+          <div class="skill" style="--c: var(--cyan); --lvl: 75%">
+            <div class="u-comp-h"><span class="tri">▼</span><svg class="ico"><use href="#i-script"/></svg><span class="u-check"></span>SQL<span class="u-menu">⋮</span></div>
+            <div class="u-prop"><label>Uso</label><span class="uso">Diseño y consulta de bases de datos</span></div>
+            <div class="u-prop"><label>Nivel</label><span class="u-slider"><span class="track"><i></i><b></b></span><span class="u-field mono">0.75</span></span></div>
+          </div>
+          <div class="skill" style="--c: var(--pink); --lvl: 35%">
+            <div class="u-comp-h"><span class="tri">▼</span><svg class="ico"><use href="#i-script"/></svg><span class="u-check"></span>C# <span class="learning mono">aprendiendo</span><span class="u-menu">⋮</span></div>
+            <div class="u-prop"><label>Uso</label><span class="uso">Videojuegos con Unity</span></div>
+            <div class="u-prop"><label>Nivel</label><span class="u-slider"><span class="track"><i></i><b></b></span><span class="u-field mono">0.35</span></span></div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -271,10 +405,19 @@
     <div class="projects">
 
       <article class="project" style="--c: var(--teal)">
+        <div class="u-tabs"><span class="u-tab on"><svg class="ico"><use href="#i-scene"/></svg>Scene</span><span class="u-tab"><svg class="ico"><use href="#i-game"/></svg>Game</span><span class="u-menu mono">2D <svg class="ico"><use href="#i-cam"/></svg></span></div>
         <div class="thumb">
-          <img class="app-icon" src="1795518891212_image.png" alt="Icono de la app de la Asociación Titanium" loading="lazy">
+          <!-- gizmo de cámara: lo que la cámara ve -->
+          <svg class="gizmo" viewBox="0 0 300 180" preserveAspectRatio="xMidYMid meet" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1">
+            <path d="M58 12h184v156H58z" stroke="rgba(255,255,255,.75)"/>
+            <path d="M26 40 58 12M26 40 242 12M26 40 58 168M26 40 242 168" stroke-dasharray="3 3"/>
+            <g transform="translate(10 30)" stroke="rgba(255,255,255,.9)" stroke-width="1.3"><path d="M0 4h14v11H0zM14 7.5l6-3v10l-6-3"/><circle cx="4" cy="1" r="2.3"/><circle cx="10" cy="1" r="2.3"/></g>
+          </svg>
+          <svg class="axes"><use href="#i-axes"/></svg><span class="persp mono">Persp</span>
+          <div class="sel"><img class="app-icon" src="1795518891212_image.png" alt="Icono de la app de la Asociación Titanium" loading="lazy"></div>
         </div>
         <div class="body">
+          <div class="comp-name mono"><svg class="ico"><use href="#i-cube"/></svg>AppTitanium.prefab</div>
           <h3>App Asociación Titanium</h3>
           <p>La app oficial de una asociación de música rock: próximos eventos, formas de contacto y una galería con fotos y vídeos de sus conciertos, todo en el bolsillo de sus seguidores.</p>
           <div class="chips mono"><span class="chip">Android</span><span class="chip">Kotlin</span><span class="chip">Multimedia</span><span class="chip">Asistido por IA</span></div>
@@ -286,10 +429,21 @@
       </article>
 
       <article class="project" style="--c: var(--violet)">
+        <div class="u-tabs"><span class="u-tab on"><svg class="ico"><use href="#i-scene"/></svg>Scene</span><span class="u-tab"><svg class="ico"><use href="#i-game"/></svg>Game</span><span class="u-menu mono">2D <svg class="ico"><use href="#i-light"/></svg></span></div>
         <div class="thumb">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10 18h4"/><circle cx="12" cy="10" r="3.2"/><path d="M12 5.2v1.2M12 13.6v1.2M7.2 10h1.2M15.6 10h1.2"/></svg>
+          <!-- gizmo de luz puntual: bombilla y su rango -->
+          <svg class="gizmo" viewBox="0 0 300 180" preserveAspectRatio="xMidYMid meet" fill="none" stroke="rgba(255,213,74,.7)" stroke-width="1">
+            <circle cx="150" cy="90" r="74"/>
+            <ellipse cx="150" cy="90" rx="74" ry="20" stroke-dasharray="3 3"/>
+            <ellipse cx="150" cy="90" rx="20" ry="74" stroke-dasharray="3 3"/>
+            <path d="M150 16v-6M150 164v6M76 90h-6M224 90h6" stroke-width="1.6"/>
+            <g transform="translate(206 28)" stroke="#ffd54a" stroke-width="1.4"><path d="M8 1.5a5.5 5.5 0 0 0-3.2 10V14h6.4v-2.5A5.5 5.5 0 0 0 8 1.5zM5.5 17h5"/><path d="M-3 7h-3M19 7h3M8-4v-3" stroke-width="1"/></g>
+          </svg>
+          <svg class="axes"><use href="#i-axes"/></svg><span class="persp mono">Persp</span>
+          <div class="sel"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10 18h4"/><circle cx="12" cy="10" r="3.2"/><path d="M12 5.2v1.2M12 13.6v1.2M7.2 10h1.2M15.6 10h1.2"/></svg></div>
         </div>
         <div class="body">
+          <div class="comp-name mono"><svg class="ico"><use href="#i-cube"/></svg>Sensia.prefab</div>
           <h3>App Sensia</h3>
           <p>Pensada para personas con alergias, sensibilidades o intolerancias alimentarias. Escanea el código de barras o la lista de ingredientes y te dice al momento si el producto contiene lo que no puedes tomar.</p>
           <div class="chips mono"><span class="chip">Android</span><span class="chip">Kotlin</span><span class="chip">Flutter</span><span class="chip">Escáner de códigos</span><span class="chip">Reconocimiento de texto</span><span class="chip">Asistido por IA</span></div>
@@ -298,11 +452,21 @@
       </article>
 
       <article class="project" style="--c: var(--pink)">
+        <div class="u-tabs"><span class="u-tab on"><svg class="ico"><use href="#i-scene"/></svg>Scene</span><span class="u-tab"><svg class="ico"><use href="#i-game"/></svg>Game</span><span class="u-menu mono">3D <svg class="ico"><use href="#i-game"/></svg></span></div>
         <div class="thumb">
           <span class="status mono">🚧 En desarrollo</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9h12a4 4 0 0 1 4 4v1a3 3 0 0 1-5.3 1.9L15 14H9l-1.7 1.9A3 3 0 0 1 2 14v-1a4 4 0 0 1 4-4z"/><path d="M7 11.5v2M6 12.5h2"/><circle cx="16" cy="12" r=".6"/><circle cx="17.8" cy="13.4" r=".6"/></svg>
+          <!-- gizmo de mover: flechas X / Y / Z -->
+          <svg class="gizmo" viewBox="0 0 300 180" preserveAspectRatio="xMidYMid meet" fill="none" stroke-width="2.4" stroke-linecap="round">
+            <path d="M150 90h72" stroke="#f05454"/><path d="M222 84l12 6-12 6z" fill="#f05454" stroke="#f05454" stroke-width="1"/>
+            <path d="M150 90V22" stroke="#7fd35a"/><path d="M144 22l6-12 6 12z" fill="#7fd35a" stroke="#7fd35a" stroke-width="1"/>
+            <path d="M150 90l-46 34" stroke="#4c8dff"/><path d="M99 120l-8 10 12-2z" fill="#4c8dff" stroke="#4c8dff" stroke-width="1"/>
+            <rect x="150" y="72" width="18" height="18" fill="rgba(76,141,255,.35)" stroke="#4c8dff" stroke-width="1"/>
+          </svg>
+          <svg class="axes"><use href="#i-axes"/></svg><span class="persp mono">Persp</span>
+          <div class="sel"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9h12a4 4 0 0 1 4 4v1a3 3 0 0 1-5.3 1.9L15 14H9l-1.7 1.9A3 3 0 0 1 2 14v-1a4 4 0 0 1 4-4z"/><path d="M7 11.5v2M6 12.5h2"/><circle cx="16" cy="12" r=".6"/><circle cx="17.8" cy="13.4" r=".6"/></svg></div>
         </div>
         <div class="body">
+          <div class="comp-name mono"><svg class="ico"><use href="#i-scene"/></svg>HUG.unity</div>
           <h3>HUG</h3>
           <p>Mi primer videojuego propio: un RPG por turnos con sistema gacha, donde cada combate es una decisión estratégica. Lo estoy construyendo en Unity mientras aprendo C# a fondo.</p>
           <div class="chips mono"><span class="chip">Unity</span><span class="chip">C#</span><span class="chip">RPG por turnos</span><span class="chip">Gacha</span><span class="chip">Asistido por IA</span></div>
@@ -316,38 +480,46 @@
   <section id="formacion" class="wrap reveal">
     <div class="eyebrow mono">// formación</div>
     <h2>Mi recorrido</h2>
-    <div class="timeline">
-      <div class="step">
-        <div class="when mono">2025 — actualidad</div>
-        <h3>CFGS Desarrollo de Aplicaciones Multiplataforma</h3>
-        <p>IES Donoso Cortés · Don Benito</p>
-      </div>
-      <div class="step">
-        <div class="when mono">2023</div>
-        <h3>Bachillerato de Ciencias</h3>
-        <p>IES San José · Villanueva de la Serena</p>
-      </div>
+    <div class="u-win hier">
+      <div class="u-tabs"><span class="u-tab on"><svg class="ico"><use href="#i-hier"/></svg>Hierarchy</span><span class="u-menu">⋮</span></div>
+      <div class="u-search"><span>+ ▾</span><span class="u-field">🔍 All</span></div>
+      <ul class="tree">
+        <li class="root"><span class="tri">▼</span><svg class="ico"><use href="#i-scene"/></svg>Formación<span class="u-menu">⋮</span></li>
+        <li class="l1 on"><span class="tri">▼</span><svg class="ico"><use href="#i-cube"/></svg>CFGS Desarrollo de Aplicaciones Multiplataforma<span class="when mono">2025 — actualidad</span></li>
+        <li class="l2"><svg class="ico"><use href="#i-cube"/></svg>IES Donoso Cortés · Don Benito</li>
+        <li class="l1"><span class="tri">▼</span><svg class="ico"><use href="#i-cube"/></svg>Bachillerato de Ciencias<span class="when mono">2023</span></li>
+        <li class="l2"><svg class="ico"><use href="#i-cube"/></svg>IES San José · Villanueva de la Serena</li>
+      </ul>
     </div>
   </section>
 
   <section class="wrap reveal">
     <div class="eyebrow mono">// qué busco</div>
     <h2>Hacia dónde voy</h2>
-    <div class="goals">
-      <div class="goal"><div class="ico">💼</div><h3>Primer empleo</h3><p>Entrar en un equipo de desarrollo donde aportar desde el primer día y seguir creciendo.</p></div>
-      <div class="goal"><div class="ico">🎮</div><h3>Videojuegos</h3><p>Crear juegos con mecánicas que reten al jugador y le hagan pensar.</p></div>
-      <div class="goal"><div class="ico">🤖</div><h3>Inteligencia artificial</h3><p>Aplicar la IA a productos útiles y aprender cómo funciona por dentro.</p></div>
+    <div class="u-win">
+      <div class="u-tabs"><span class="u-tab on"><svg class="ico"><use href="#i-folder"/></svg>Project</span><span class="u-tab"><svg class="ico"><use href="#i-console"/></svg>Console</span><span class="u-menu">⋮</span></div>
+      <div class="u-crumbs mono">Assets › <b>Objetivos</b></div>
+      <div class="goals">
+        <div class="goal"><svg class="ico gz" style="color: var(--teal)"><use href="#i-cam"/></svg><span class="file mono">PrimerEmpleo.prefab</span><h3>Primer empleo</h3><p>Entrar en un equipo de desarrollo donde aportar desde el primer día y seguir creciendo.</p></div>
+        <div class="goal"><svg class="ico gz" style="color: var(--pink)"><use href="#i-game"/></svg><span class="file mono">Videojuegos.unity</span><h3>Videojuegos</h3><p>Crear juegos con mecánicas que reten al jugador y le hagan pensar.</p></div>
+        <div class="goal"><svg class="ico gz" style="color: var(--amber)"><use href="#i-bulb"/></svg><span class="file mono">InteligenciaArtificial.asset</span><h3>Inteligencia artificial</h3><p>Aplicar la IA a productos útiles y aprender cómo funciona por dentro.</p></div>
+      </div>
     </div>
   </section>
 
   <section id="contacto" class="wrap reveal">
-    <div class="contact">
-      <div class="eyebrow mono">// contacto</div>
-      <h2>¿Hablamos?</h2>
-      <p>Si tienes una oportunidad, un proyecto o simplemente quieres saludar, escríbeme.</p>
-      <div class="actions">
-        <a href="mailto:hugorejfer@gmail.com" class="btn primary">hugorejfer@gmail.com</a>
-        <a href="https://github.com/PerchaCervantina" class="btn ghost" target="_blank" rel="noopener">github.com/PerchaCervantina</a>
+    <div class="u-play" aria-hidden="true"><span class="on"><svg class="ico"><use href="#i-play"/></svg></span><span><svg class="ico"><use href="#i-pause"/></svg></span><span><svg class="ico"><use href="#i-step"/></svg></span></div>
+    <div class="u-win">
+      <div class="u-tabs"><span class="u-tab on"><svg class="ico"><use href="#i-game"/></svg>Game</span><span class="u-menu">⋮</span></div>
+      <div class="u-toolbar mono"><span class="u-field u-drop">Display 1</span><span class="u-field u-drop">Free Aspect</span><span class="scale">Scale <i></i> 1x</span></div>
+      <div class="contact">
+        <div class="eyebrow mono">// contacto</div>
+        <h2>¿Hablamos?</h2>
+        <p>Si tienes una oportunidad, un proyecto o simplemente quieres saludar, escríbeme.</p>
+        <div class="actions">
+          <a href="mailto:hugorejfer@gmail.com" class="btn primary">hugorejfer@gmail.com</a>
+          <a href="https://github.com/PerchaCervantina" class="btn ghost" target="_blank" rel="noopener">github.com/PerchaCervantina</a>
+        </div>
       </div>
     </div>
   </section>
