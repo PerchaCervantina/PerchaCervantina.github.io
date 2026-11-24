@@ -126,6 +126,8 @@
     background: radial-gradient(circle at 30% 30%, var(--c), transparent 70%), var(--bg-2);
   }
   .thumb svg { width: 64px; height: 64px; stroke: #fff; opacity: .92; }
+  .thumb .app-icon { width: 124px; height: 124px; border-radius: 28px; object-fit: cover; object-position: 50% 62%; border: 1px solid rgba(255,255,255,.18); box-shadow: 0 14px 30px -10px rgba(0,0,0,.8); transition: transform .25s; }
+  .project:hover .app-icon { transform: scale(1.06) rotate(-3deg); }
   .status { position: absolute; top: 14px; right: 14px; font-size: .75rem; padding: 4px 10px; border-radius: 999px; background: rgba(0,0,0,.55); border: 1px solid rgba(255,255,255,.15); }
   .project .body { padding: 22px; display: flex; flex-direction: column; flex: 1; }
   .project h3 { font-size: 1.25rem; margin-bottom: 8px; }
@@ -260,7 +262,7 @@
 
       <article class="project" style="--c: var(--teal)">
         <div class="thumb">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10 18h4"/><path d="M9.5 7.5h5M9.5 11h5M9.5 14.5h3"/></svg>
+          <img class="app-icon" src="1795518891212_image.png" alt="Icono de la app de la Asociación Titanium" loading="lazy">
         </div>
         <div class="body">
           <h3>App Asociación Titanium</h3>
