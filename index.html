@@ -47,6 +47,14 @@
       linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px) 0 0 / 40px 40px;
   }
 
+  /* cadenas de ADN pixeladas del fondo (guiño a HUG) */
+  #adn {
+    position: fixed; inset: 0; width: 100vw; height: 100vh;
+    z-index: -1; pointer-events: none;
+    image-rendering: pixelated; image-rendering: crisp-edges;
+    opacity: .55;
+  }
+
   /* navegación */
   nav {
     position: sticky; top: 0; z-index: 10;
@@ -186,6 +194,8 @@
 </style>
 </head>
 <body>
+
+<canvas id="adn" aria-hidden="true"></canvas>
 
 <nav>
   <div class="wrap">
@@ -375,6 +385,158 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("show"); });
   }, { threshold: 0.12 });
   document.querySelectorAll(".reveal").forEach(s => io.observe(s));
+
+  // ===== Cadenas de ADN pixeladas (decoración de fondo, inspirada en HUG) =====
+  (() => {
+    const cv = document.getElementById("adn");
+    const ctx = cv.getContext("2d");
+    const PARES = [["#fbbf24", "#f472b6"], ["#22d3ee", "#14b8a6"]]; // A-T y G-C
+    const HEBRA_A = "#2dd4bf", HEBRA_B = "#a78bfa";
+    let PX, W, H, cadenas = [], chispas = [], esperas = [];
+    const azar = (a, b) => a + Math.random() * (b - a);
+
+    function medir() {
+      PX = innerWidth < 760 ? 3 : 4;          // tamaño de cada "píxel"
+      W = Math.ceil(innerWidth / PX);
+      H = Math.ceil(innerHeight / PX);
+      cv.width = W; cv.height = H;
+    }
+    const objetivo = () => Math.max(3, Math.min(8, Math.round(innerWidth * innerHeight / 180000)));
+
+    function nueva(crecida) {
+      const n = Math.round(azar(12, 30));
+      // preferimos los laterales para no tapar el texto
+      const x = Math.random() < .75
+        ? (Math.random() < .5 ? azar(-5, W * .25) : azar(W * .75, W + 5))
+        : azar(0, W);
+      const c = {
+        x, y: azar(-10, H - 20),
+        ang: Math.PI / 2 + azar(-.6, .6) + (Math.random() < .2 ? Math.PI / 2 : 0),
+        vx: azar(-3, 3), vy: azar(-4, 4),           // deriva en píxeles/s
+        n, sp: 3, amp: azar(3.5, 6.5),
+        fase: azar(0, 6.3), giro: azar(.8, 1.8) * (Math.random() < .5 ? -1 : 1),
+        alfa: azar(.55, 1),
+        estado: crecida ? "vive" : "crece",
+        reloj: 0, vida: azar(6, 12),
+        peldanos: Array.from({ length: n }, () => {
+          const p = PARES[Math.random() * 2 | 0];
+          return { col: Math.random() < .5 ? p : [p[1], p[0]], on: crecida, t: crecida ? -9 : 0 };
+        }),
+        hechos: crecida ? n : 0,
+        orden: []
+      };
+      return c;
+    }
+
+    function px(x, y, color, a) {
+      x = Math.round(x); y = Math.round(y);
+      if (x < 0 || y < 0 || x >= W || y >= H) return;
+      ctx.globalAlpha = a; ctx.fillStyle = color; ctx.fillRect(x, y, 1, 1);
+    }
+
+    function dibujar(c, ahora) {
+      const ax = Math.cos(c.ang), ay = Math.sin(c.ang), nx = -ay, ny = ax;
+      for (let i = 0; i < c.n; i++) {
+        const r = c.peldanos[i];
+        if (!r.on) continue;
+        const sigue = i + 1 < c.n && c.peldanos[i + 1].on;
+        // esqueleto de las dos hebras
+        for (let s = 0; s < (sigue ? 4 : 1); s++) {
+          const k = i + s / 4, t = k * .55 + c.fase;
+          const bx = c.x + ax * k * c.sp, by = c.y + ay * k * c.sp;
+          const o = Math.sin(t) * c.amp, prof = Math.cos(t);
+          px(bx + nx * o, by + ny * o, HEBRA_A, c.alfa * (prof > 0 ? 1 : .4));
+          px(bx - nx * o, by - ny * o, HEBRA_B, c.alfa * (prof > 0 ? .4 : 1));
+        }
+        // par de bases
+        const t = i * .55 + c.fase, o = Math.sin(t) * c.amp;
+        const bx = c.x + ax * i * c.sp, by = c.y + ay * i * c.sp;
+        const pasos = Math.ceil(Math.abs(o) * 2);
+        const flash = ahora - r.t < .25;
+        for (let p = 1; p < pasos; p++) {
+          const f = -1 + 2 * p / pasos;
+          px(bx + nx * o * f, by + ny * o * f, flash ? "#ffffff" : r.col[f < 0 ? 0 : 1], c.alfa * (flash ? 1 : .6));
+        }
+      }
+    }
+
+    function soltarChispas(c, i) {
+      const t = i * .55 + c.fase, o = Math.sin(t) * c.amp;
+      const ax = Math.cos(c.ang), ay = Math.sin(c.ang);
+      const bx = c.x + ax * i * c.sp, by = c.y + ay * i * c.sp;
+      const cols = [HEBRA_A, HEBRA_B, ...c.peldanos[i].col];
+      for (let k = 0; k < 4; k++) {
+        const f = azar(-1, 1);
+        chispas.push({
+          x: bx - ay * o * f, y: by + ax * o * f,
+          vx: azar(-6, 6), vy: azar(-8, 2), vida: azar(.4, 1.1),
+          col: cols[k], a: c.alfa
+        });
+      }
+    }
+
+    function actualizar(c, dt, ahora) {
+      c.reloj += dt;
+      c.x += c.vx * dt; c.y += c.vy * dt;
+      c.fase += c.giro * dt;
+      if (c.estado === "crece") {
+        while (c.hechos < c.n && c.reloj > c.hechos * .09) {
+          const r = c.peldanos[c.hechos++]; r.on = true; r.t = ahora;
+        }
+        if (c.hechos === c.n) { c.estado = "vive"; c.reloj = 0; }
+      } else if (c.estado === "vive" && c.reloj > c.vida) {
+        c.estado = "muere"; c.reloj = 0;
+        c.orden = [...Array(c.n).keys()].sort(() => Math.random() - .5);
+      } else if (c.estado === "muere") {
+        while (c.orden.length && c.reloj > (c.n - c.orden.length) * .07) {
+          const i = c.orden.pop(); c.peldanos[i].on = false; soltarChispas(c, i);
+        }
+        if (!c.orden.length) return false;
+      }
+      return true;
+    }
+
+    const calma = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    medir();
+
+    if (calma) {
+      // sin animación: unas cuantas cadenas quietas
+      const pintarQuietas = () => {
+        medir(); ctx.clearRect(0, 0, W, H);
+        cadenas = Array.from({ length: objetivo() }, () => nueva(true));
+        cadenas.forEach(c => dibujar(c, 0));
+      };
+      pintarQuietas();
+      addEventListener("resize", pintarQuietas);
+      return;
+    }
+
+    addEventListener("resize", medir);
+    for (let i = 0; i < objetivo(); i++) esperas.push(azar(0, 2.5));
+
+    let antes = performance.now(), acum = 0, ahora = 0;
+    function bucle(ms) {
+      const dt = Math.min(.1, (ms - antes) / 1000); antes = ms;
+      acum += dt; ahora += dt;
+      requestAnimationFrame(bucle);
+      if (acum < 1 / 30) return;               // ~30 fps, más "retro"
+      const paso = acum; acum = 0;
+
+      esperas = esperas.map(e => e - paso);
+      esperas = esperas.filter(e => e > 0 || (cadenas.push(nueva(false)), false));
+      cadenas = cadenas.filter(c => actualizar(c, paso, ahora));
+      while (cadenas.length + esperas.length < objetivo()) esperas.push(azar(.5, 2.5));
+
+      chispas = chispas.filter(s => (s.vida -= paso) > 0);
+      ctx.clearRect(0, 0, W, H);
+      cadenas.forEach(c => dibujar(c, ahora));
+      chispas.forEach(s => {
+        s.x += s.vx * paso; s.y += s.vy * paso; s.vy += 12 * paso;
+        px(s.x, s.y, s.col, s.a * Math.min(1, s.vida * 2));
+      });
+    }
+    requestAnimationFrame(bucle);
+  })();
 
   const links = document.querySelectorAll("nav ul a");
   window.addEventListener("scroll", () => {
