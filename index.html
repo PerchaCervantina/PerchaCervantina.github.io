@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hugo Rejas Fernández · Desarrollador de aplicaciones</title>
+<meta name="description" content="Portfolio de Hugo Rejas Fernández, estudiante de 2º de DAM. Apps Android, Java, Kotlin y SQL. Aprendiendo C# para crear videojuegos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #07090b;
+    --bg-2: #0d1215;
+    --card: #10171b;
+    --line: #1c2a30;
+    --text: #e6f1f2;
+    --muted: #8aa1a6;
+    --teal: #2dd4bf;
+    --teal-2: #14b8a6;
+    --cyan: #22d3ee;
+    --violet: #a78bfa;
+    --pink: #f472b6;
+    --amber: #fbbf24;
+    --radius: 16px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Space Grotesk", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  .mono { font-family: "JetBrains Mono", monospace; }
+  .wrap { width: min(1100px, 92%); margin: 0 auto; }
+
+  /* fondo con brillo */
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(600px 400px at 85% 10%, rgba(45,212,191,.14), transparent 60%),
+      radial-gradient(500px 400px at 5% 60%, rgba(167,139,250,.10), transparent 60%),
+      linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px) 0 0 / 40px 40px,
+      linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px) 0 0 / 40px 40px;
+  }
+
+  /* navegación */
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(7,9,11,.75); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .logo { font-weight: 700; font-size: 1.15rem; }
+  .logo span { color: var(--teal); }
+  nav ul { display: flex; gap: 28px; list-style: none; }
+  nav ul a { color: var(--muted); font-size: .95rem; transition: color .2s; }
+  nav ul a:hover, nav ul a.active { color: var(--teal); }
+
+  /* portada */
+  .hero { padding: 110px 0 90px; }
+  .tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 14px; border: 1px solid var(--line); border-radius: 999px;
+    color: var(--teal); font-size: .85rem; background: rgba(45,212,191,.06);
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 12px var(--teal); animation: pulse 2s infinite; }
+  @keyframes pulse { 50% { opacity: .35; } }
+  .hero h1 { font-size: clamp(2.6rem, 6vw, 4.4rem); line-height: 1.05; margin: 22px 0 18px; letter-spacing: -.02em; }
+  .grad {
+    background: linear-gradient(90deg, var(--teal), var(--cyan) 50%, var(--violet));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero p.lead { font-size: 1.2rem; color: var(--muted); max-width: 640px; }
+  .typed { color: var(--text); border-right: 2px solid var(--teal); padding-right: 4px; white-space: nowrap; }
+  .actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 22px; border-radius: 12px; font-weight: 500; transition: transform .2s, box-shadow .2s, border-color .2s;
+  }
+  .btn.primary { background: var(--teal); color: #031312; }
+  .btn.primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(45,212,191,.3); }
+  .btn.ghost { border: 1px solid var(--line); }
+  .btn.ghost:hover { border-color: var(--teal); color: var(--teal); }
+
+  /* secciones */
+  section { padding: 80px 0; }
+  .eyebrow { color: var(--teal); font-size: .85rem; letter-spacing: .12em; text-transform: uppercase; }
+  h2 { font-size: clamp(1.8rem, 3.5vw, 2.4rem); margin: 6px 0 34px; }
+
+  .about { display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; align-items: start; }
+  .about p { color: var(--muted); margin-bottom: 16px; font-size: 1.05rem; }
+  .about p strong { color: var(--text); font-weight: 500; }
+  .facts { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+  .facts li { list-style: none; display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px dashed var(--line); font-size: .95rem; }
+  .facts li:last-child { border-bottom: 0; }
+  .facts li span:first-child { color: var(--muted); }
+  .facts li span:last-child { text-align: right; }
+
+  /* tecnologías */
+  .skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+  .skill {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px;
+    position: relative; overflow: hidden; transition: border-color .2s, transform .2s;
+  }
+  .skill:hover { border-color: var(--c); transform: translateY(-3px); }
+  .skill::after { content: ""; position: absolute; left: 0; top: 0; height: 3px; width: 100%; background: var(--c); }
+  .skill h3 { font-size: 1.2rem; }
+  .skill p { color: var(--muted); font-size: .9rem; margin: 4px 0 16px; }
+  .bar { height: 6px; border-radius: 6px; background: var(--line); overflow: hidden; }
+  .bar i { display: block; height: 100%; width: var(--lvl); background: var(--c); border-radius: 6px; }
+  .learning { font-size: .75rem; color: var(--c); border: 1px solid var(--c); border-radius: 999px; padding: 2px 8px; margin-left: 8px; vertical-align: middle; }
+
+  /* proyectos */
+  .projects { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px; }
+  .project {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
+    display: flex; flex-direction: column; transition: transform .25s, border-color .25s, box-shadow .25s;
+  }
+  .project:hover { transform: translateY(-5px); border-color: var(--c); box-shadow: 0 16px 40px -18px var(--c); }
+  .thumb {
+    height: 170px; display: grid; place-items: center; position: relative;
+    background: radial-gradient(circle at 30% 30%, var(--c), transparent 70%), var(--bg-2);
+  }
+  .thumb svg { width: 64px; height: 64px; stroke: #fff; opacity: .92; }
+  .status { position: absolute; top: 14px; right: 14px; font-size: .75rem; padding: 4px 10px; border-radius: 999px; background: rgba(0,0,0,.55); border: 1px solid rgba(255,255,255,.15); }
+  .project .body { padding: 22px; display: flex; flex-direction: column; flex: 1; }
+  .project h3 { font-size: 1.25rem; margin-bottom: 8px; }
+  .project p { color: var(--muted); font-size: .95rem; flex: 1; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0; }
+  .chip { font-size: .78rem; padding: 4px 10px; border-radius: 8px; background: rgba(45,212,191,.08); color: var(--teal); border: 1px solid rgba(45,212,191,.2); }
+  .project a.link { color: var(--c); font-weight: 500; font-size: .95rem; }
+  .project a.link:hover { text-decoration: underline; }
+  .links { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+  .btn-apk {
+    font-size: .85rem; font-weight: 600; padding: 8px 14px; border-radius: 10px;
+    background: var(--c); color: #031312; transition: transform .2s, box-shadow .2s;
+  }
+  .btn-apk:hover { transform: translateY(-2px); box-shadow: 0 8px 22px -8px var(--c); }
+
+  /* formación */
+  .timeline { position: relative; padding-left: 30px; }
+  .timeline::before { content: ""; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 2px; background: linear-gradient(var(--teal), var(--violet)); }
+  .step { position: relative; margin-bottom: 34px; }
+  .step::before { content: ""; position: absolute; left: -30px; top: 6px; width: 16px; height: 16px; border-radius: 50%; background: var(--bg); border: 3px solid var(--teal); }
+  .step .when { color: var(--teal); font-size: .85rem; }
+  .step h3 { font-size: 1.2rem; margin: 2px 0; }
+  .step p { color: var(--muted); }
+
+  /* qué busco */
+  .goals { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
+  .goal { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; }
+  .goal .ico { font-size: 1.8rem; }
+  .goal h3 { margin: 10px 0 6px; }
+  .goal p { color: var(--muted); font-size: .95rem; }
+
+  /* contacto */
+  .contact {
+    text-align: center; background: linear-gradient(135deg, rgba(45,212,191,.12), rgba(167,139,250,.10));
+    border: 1px solid var(--line); border-radius: 24px; padding: 60px 24px;
+  }
+  .contact h2 { margin-bottom: 12px; }
+  .contact p { color: var(--muted); margin-bottom: 30px; }
+  .contact .actions { justify-content: center; }
+
+  footer { text-align: center; color: var(--muted); font-size: .85rem; padding: 40px 0; }
+
+  /* aparición al hacer scroll */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s, transform .7s; }
+  .reveal.show { opacity: 1; transform: none; }
+
+  @media (max-width: 760px) {
+    nav ul { display: none; }
+    .about { grid-template-columns: 1fr; }
+    .hero { padding: 70px 0 50px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .dot { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="#inicio" class="logo mono">hugo<span>.dev</span></a>
+    <ul>
+      <li><a href="#sobre-mi">Sobre mí</a></li>
+      <li><a href="#tecnologias">Tecnologías</a></li>
+      <li><a href="#proyectos">Proyectos</a></li>
+      <li><a href="#formacion">Formación</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero wrap" id="inicio">
+  <span class="tag mono"><span class="dot"></span> Disponible para mi primer empleo</span>
+  <h1>Hola, soy <span class="grad">Hugo Rejas</span>.<br>Desarrollo apps y sueño con videojuegos.</h1>
+  <p class="lead">Estudiante de 2º de DAM en Extremadura. Me gusta crear <span class="typed mono" id="typed">apps que resuelven problemas reales</span></p>
+  <div class="actions">
+    <a href="#proyectos" class="btn primary">Ver proyectos →</a>
+    <a href="https://github.com/PerchaCervantina" class="btn ghost" target="_blank" rel="noopener">GitHub</a>
+    <a href="mailto:hugorejfer@gmail.com" class="btn ghost">Escríbeme</a>
+  </div>
+</header>
+
+<main>
+  <section id="sobre-mi" class="wrap reveal">
+    <div class="eyebrow mono">// sobre mí</div>
+    <h2>Tecnología con propósito</h2>
+    <div class="about">
+      <div>
+        <p>Siempre me ha atraído la tecnología, sobre todo cuando sirve para algo: <strong>aplicaciones que hacen más fácil el día a día</strong> y <strong>videojuegos que te obligan a pensar</strong>.</p>
+        <p>Durante el ciclo he desarrollado <strong>aplicaciones Android para organizaciones reales</strong>, trabajando con Java, Kotlin y bases de datos SQL. Ahora estoy aprendiendo <strong>C#</strong> con <strong>Unity</strong> mientras construyo mi primer videojuego propio, <strong>HUG</strong>.</p>
+        <p>En todos mis proyectos trabajo con <strong>IA como asistente de desarrollo</strong> (Claude): me ayuda a avanzar más rápido y a aprender, pero las decisiones y el código final son míos.</p>
+        <p>Busco un primer empleo donde seguir aprendiendo en equipo, idealmente en el mundo de los <strong>videojuegos</strong> o de la <strong>inteligencia artificial</strong>.</p>
+      </div>
+      <ul class="facts">
+        <li><span>Nombre</span><span>Hugo Rejas Fernández</span></li>
+        <li><span>Estudios</span><span>2º DAM</span></li>
+        <li><span>Centro</span><span>IES Donoso Cortés</span></li>
+        <li><span>Ubicación</span><span>Badajoz, Extremadura</span></li>
+        <li><span>Intereses</span><span>Videojuegos · IA</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="tecnologias" class="wrap reveal">
+    <div class="eyebrow mono">// tecnologías</div>
+    <h2>Con qué trabajo</h2>
+    <div class="skills">
+      <div class="skill" style="--c: var(--amber); --lvl: 80%">
+        <h3>Java</h3><p>Programación orientada a objetos</p>
+        <div class="bar"><i></i></div>
+      </div>
+      <div class="skill" style="--c: var(--violet); --lvl: 75%">
+        <h3>Kotlin</h3><p>Desarrollo de apps Android</p>
+        <div class="bar"><i></i></div>
+      </div>
+      <div class="skill" style="--c: var(--cyan); --lvl: 75%">
+        <h3>SQL</h3><p>Diseño y consulta de bases de datos</p>
+        <div class="bar"><i></i></div>
+      </div>
+      <div class="skill" style="--c: var(--pink); --lvl: 35%">
+        <h3>C# <span class="learning mono">aprendiendo</span></h3><p>Videojuegos con Unity</p>
+        <div class="bar"><i></i></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="proyectos" class="wrap reveal">
+    <div class="eyebrow mono">// proyectos</div>
+    <h2>Lo que he construido</h2>
+    <div class="projects">
+
+      <article class="project" style="--c: var(--teal)">
+        <div class="thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10 18h4"/><path d="M9.5 7.5h5M9.5 11h5M9.5 14.5h3"/></svg>
+        </div>
+        <div class="body">
+          <h3>App Asociación Titanium</h3>
+          <p>La app oficial de una asociación de música rock: próximos eventos, formas de contacto y una galería con fotos y vídeos de sus conciertos, todo en el bolsillo de sus seguidores.</p>
+          <div class="chips mono"><span class="chip">Android</span><span class="chip">Kotlin</span><span class="chip">Multimedia</span><span class="chip">Asistido por IA</span></div>
+          <div class="links">
+            <a class="btn-apk mono" href="https://github.com/PerchaCervantina/AppTitanium/raw/feature/admin-accounts/distribucion/titanium.apk" download>⬇ Descargar APK</a>
+            <a class="link" href="https://github.com/PerchaCervantina/AppTitanium" target="_blank" rel="noopener">Ver código →</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="project" style="--c: var(--violet)">
+        <div class="thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10 18h4"/><circle cx="12" cy="10" r="3.2"/><path d="M12 5.2v1.2M12 13.6v1.2M7.2 10h1.2M15.6 10h1.2"/></svg>
+        </div>
+        <div class="body">
+          <h3>App Sensia</h3>
+          <p>Pensada para personas con alergias, sensibilidades o intolerancias alimentarias. Escanea el código de barras o la lista de ingredientes y te dice al momento si el producto contiene lo que no puedes tomar.</p>
+          <div class="chips mono"><span class="chip">Android</span><span class="chip">Kotlin</span><span class="chip">Flutter</span><span class="chip">Escáner de códigos</span><span class="chip">Reconocimiento de texto</span><span class="chip">Asistido por IA</span></div>
+          <a class="link" href="https://github.com/PerchaCervantina?tab=repositories" target="_blank" rel="noopener">Ver en GitHub →</a>
+        </div>
+      </article>
+
+      <article class="project" style="--c: var(--pink)">
+        <div class="thumb">
+          <span class="status mono">🚧 En desarrollo</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9h12a4 4 0 0 1 4 4v1a3 3 0 0 1-5.3 1.9L15 14H9l-1.7 1.9A3 3 0 0 1 2 14v-1a4 4 0 0 1 4-4z"/><path d="M7 11.5v2M6 12.5h2"/><circle cx="16" cy="12" r=".6"/><circle cx="17.8" cy="13.4" r=".6"/></svg>
+        </div>
+        <div class="body">
+          <h3>HUG</h3>
+          <p>Mi primer videojuego propio: un RPG por turnos con sistema gacha, donde cada combate es una decisión estratégica. Lo estoy construyendo en Unity mientras aprendo C# a fondo.</p>
+          <div class="chips mono"><span class="chip">Unity</span><span class="chip">C#</span><span class="chip">RPG por turnos</span><span class="chip">Gacha</span><span class="chip">Asistido por IA</span></div>
+          <a class="link" href="https://github.com/PerchaCervantina?tab=repositories" target="_blank" rel="noopener">Seguir el progreso →</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section id="formacion" class="wrap reveal">
+    <div class="eyebrow mono">// formación</div>
+    <h2>Mi recorrido</h2>
+    <div class="timeline">
+      <div class="step">
+        <div class="when mono">2025 — actualidad</div>
+        <h3>CFGS Desarrollo de Aplicaciones Multiplataforma</h3>
+        <p>IES Donoso Cortés · Don Benito</p>
+      </div>
+      <div class="step">
+        <div class="when mono">2023</div>
+        <h3>Bachillerato de Ciencias</h3>
+        <p>IES San José · Villanueva de la Serena</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap reveal">
+    <div class="eyebrow mono">// qué busco</div>
+    <h2>Hacia dónde voy</h2>
+    <div class="goals">
+      <div class="goal"><div class="ico">💼</div><h3>Primer empleo</h3><p>Entrar en un equipo de desarrollo donde aportar desde el primer día y seguir creciendo.</p></div>
+      <div class="goal"><div class="ico">🎮</div><h3>Videojuegos</h3><p>Crear juegos con mecánicas que reten al jugador y le hagan pensar.</p></div>
+      <div class="goal"><div class="ico">🤖</div><h3>Inteligencia artificial</h3><p>Aplicar la IA a productos útiles y aprender cómo funciona por dentro.</p></div>
+    </div>
+  </section>
+
+  <section id="contacto" class="wrap reveal">
+    <div class="contact">
+      <div class="eyebrow mono">// contacto</div>
+      <h2>¿Hablamos?</h2>
+      <p>Si tienes una oportunidad, un proyecto o simplemente quieres saludar, escríbeme.</p>
+      <div class="actions">
+        <a href="mailto:hugorejfer@gmail.com" class="btn primary">hugorejfer@gmail.com</a>
+        <a href="https://github.com/PerchaCervantina" class="btn ghost" target="_blank" rel="noopener">github.com/PerchaCervantina</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="mono">© 2026 Hugo Rejas Fernández · Hecho a mano y publicado con GitHub Pages</footer>
+
+<script>
+  // texto que va cambiando en la portada
+  const frases = [
+    "apps que resuelven problemas reales",
+    "videojuegos que te hacen pensar",
+    "soluciones para el día a día"
+  ];
+  const el = document.getElementById("typed");
+  const calma = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!calma) {
+    let f = 0, i = frases[0].length, borrando = true;
+    function tick() {
+      i += borrando ? -1 : 1;
+      el.textContent = frases[f].slice(0, i);
+      let espera = borrando ? 35 : 70;
+      if (borrando && i === 0) {
+        borrando = false; f = (f + 1) % frases.length; espera = 300;
+      } else if (!borrando && i === frases[f].length) {
+        borrando = true; espera = 2200;
+      }
+      setTimeout(tick, espera);
+    }
+    setTimeout(tick, 2500);
+  }
+
+  // aparición de secciones y enlace activo del menú
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("show"); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll(".reveal").forEach(s => io.observe(s));
+
+  const links = document.querySelectorAll("nav ul a");
+  window.addEventListener("scroll", () => {
+    let actual = "";
+    document.querySelectorAll("section[id]").forEach(s => {
+      if (scrollY >= s.offsetTop - 120) actual = s.id;
+    });
+    links.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + actual));
+  });
+</script>
+</body>
+</html>
