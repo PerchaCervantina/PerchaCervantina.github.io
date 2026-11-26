@@ -87,15 +87,14 @@
     content: ""; position: absolute; left: 50%; top: 52%; width: 300px; height: 300px; transform: translate(-50%, -50%); z-index: -1;
     background: radial-gradient(circle, rgba(167,139,250,.22), rgba(45,212,191,.08) 45%, transparent 70%);
   }
-  .pj-sprite { --s: 3; position: relative; width: calc(79px * var(--s)); height: calc(128px * var(--s)); }
-  .pj-sprite canvas { width: 100%; height: 100%; image-rendering: pixelated; display: block; }
-  .pj.vivo .pj-sprite canvas { animation: respira 1.2s steps(1) infinite; }
-  @keyframes respira { 50% { transform: translateY(calc(-1px * var(--s))); } }
-  /* sombra pixelada bajo los pies */
+  .pj-sprite { position: relative; width: 240px; aspect-ratio: 475 / 775; }
+  .pj-sprite > img { width: 100%; height: 100%; display: block; filter: drop-shadow(0 0 1px rgba(0,0,0,.8)); }
+  .pj.vivo .pj-sprite > img { animation: flota 3.2s ease-in-out infinite; }
+  @keyframes flota { 50% { transform: translateY(-7px); } }
+  /* sombra bajo los pies */
   .pj-sprite::after {
-    content: ""; position: absolute; left: 50%; bottom: calc(-2px * var(--s)); transform: translateX(-50%);
-    width: calc(26px * var(--s)); height: calc(3px * var(--s)); background: rgba(0,0,0,.55);
-    clip-path: polygon(12% 0, 88% 0, 88% 33%, 100% 33%, 100% 66%, 88% 66%, 88% 100%, 12% 100%, 12% 66%, 0 66%, 0 33%, 12% 33%);
+    content: ""; position: absolute; left: 50%; bottom: -6px; transform: translateX(-50%); z-index: -1;
+    width: 90px; height: 12px; border-radius: 50%; background: radial-gradient(rgba(0,0,0,.6), transparent 70%);
   }
   /* al pasar el ratón: seleccionada como en el editor de Unity */
   .pj-sprite::before {
@@ -109,8 +108,15 @@
   }
   .pj:hover .pj-sprite::before, .pj:focus-visible .pj-sprite::before { opacity: 1; }
   .pj-bocadillo {
-    position: absolute; top: 18px; right: 4px; padding: 4px 9px; font-size: 1rem; color: var(--pink);
-    background: var(--card); border: 2px solid var(--line); opacity: 0; transform: translateY(6px); transition: opacity .15s, transform .15s;
+    position: absolute; top: -6px; right: -64px; z-index: 3; padding: 6px; pointer-events: none;
+    background: var(--card); border: 1px solid var(--line); box-shadow: 0 12px 30px -12px rgba(0,0,0,.9);
+    opacity: 0; transform: translateY(6px); transition: opacity .15s, transform .15s;
+  }
+  .pj-bocadillo img { width: 104px; display: block; }
+  .pj-bocadillo b { position: absolute; top: 4px; right: 7px; color: var(--pink); font-weight: 400; }
+  .pj-bocadillo::after {
+    content: ""; position: absolute; left: -7px; bottom: 22px; width: 12px; height: 12px;
+    background: var(--card); border-left: 1px solid var(--line); border-bottom: 1px solid var(--line); transform: rotate(45deg);
   }
   .pj:hover .pj-bocadillo, .pj:focus-visible .pj-bocadillo, .pj.feliz .pj-bocadillo { opacity: 1; transform: none; }
   .pj figcaption { display: flex; align-items: center; gap: 6px; font-size: .72rem; color: var(--muted); }
@@ -320,7 +326,10 @@
     .tree .l2 { padding-left: 48px; }
     .hero { padding: 60px 0 40px; grid-template-columns: 1fr; }
     .pj { order: -1; justify-self: end; margin-bottom: -20px; }
-    .pj-sprite { --s: 1.5; }
+    .pj-sprite { width: 118px; }
+    .pj-bocadillo { right: auto; left: -86px; top: 0; }
+    .pj-bocadillo img { width: 64px; }
+    .pj-bocadillo::after { display: none; }
     .pj::before { width: 160px; height: 160px; }
     .pj figcaption { display: none; }
   }
@@ -358,10 +367,10 @@
     <a href="mailto:hugorejfer@gmail.com" class="btn ghost">Escríbeme</a>
   </div>
  </div>
-  <!-- personaje de HUG en pixel art -->
-  <figure class="pj" id="pj" tabindex="0" aria-label="Personaje de mi videojuego HUG en pixel art">
-    <div class="pj-sprite"><canvas width="79" height="128"></canvas></div>
-    <span class="pj-bocadillo mono" aria-hidden="true">♥</span>
+  <!-- personaje de HUG -->
+  <figure class="pj" id="pj" tabindex="0">
+    <div class="pj-sprite"><img src="img/hug-bufona.webp" width="475" height="775" alt="Personaje de mi videojuego HUG: una bufona con gorro de cascabeles, mangas enormes y costuras"></div>
+    <span class="pj-bocadillo" aria-hidden="true"><img src="img/hug-bufona-feliz.webp" alt=""><b class="mono">♥</b></span>
     <figcaption class="mono"><svg class="ico"><use href="#i-cube"/></svg>HUG · personaje en desarrollo</figcaption>
   </figure>
 </header>
@@ -610,13 +619,16 @@
     if (calma || el.dataset.montado) return alAcabar();
     el.dataset.montado = "1";
     el.style.visibility = "hidden";
-    const listas = document.fonts ? document.fonts.ready : Promise.resolve();
+    const listas = Promise.all([
+      document.fonts ? document.fonts.ready : 0,
+      ...[...el.querySelectorAll("img")].map(i => i.decode().catch(() => {}))
+    ]);
     listas.then(() => {
       const base = el.getBoundingClientRect();
       const tam = parseFloat(getComputedStyle(el).fontSize);
-      const sprite = el.querySelector("canvas");
+      const imagen = el.querySelector("img");
       const paso = el.classList.contains("pj-sprite")
-        ? base.width / sprite.width                          // un píxel del sprite
+        ? (innerWidth < 760 ? 2 : 4)                         // la imagen se monta con píxeles finos
         : Math.max(2, Math.round(tam / 13));                 // tamaño de cada píxel
       const M = 24, CAIDA = 220;                             // margen y recorrido desde abajo
       const W = Math.ceil(base.width) + M * 2, H = Math.ceil(base.height) + M * 2 + CAIDA;
@@ -626,8 +638,7 @@
       fuente.width = W; fuente.height = H;
       const f = fuente.getContext("2d");
       if (el.classList.contains("pj-sprite")) {
-        f.imageSmoothingEnabled = false;
-        f.drawImage(sprite, M, M, base.width, base.height);
+        f.drawImage(imagen, M, M, base.width, base.height);
       }
       const nodos = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
       const rango = document.createRange();
@@ -696,35 +707,18 @@
   }
   ensamblar(document.querySelector(".hero h1"), .15);
 
-  // ===== Personaje de HUG: se monta píxel a píxel, respira, parpadea y sonríe al pasar el ratón =====
+  // ===== Personaje de HUG: aparece píxel a píxel, flota y sonríe al pasar el ratón =====
   (() => {
     const pj = document.getElementById("pj");
-    const cv = pj.querySelector("canvas"), c = cv.getContext("2d");
-    const normal = new Image(), feliz = new Image();
-    normal.src = "img/hug-bufona.png"; feliz.src = "img/hug-bufona-feliz.png";
-    const pintar = img => { c.clearRect(0, 0, cv.width, cv.height); c.drawImage(img, 0, 0); };
-    let contenta = false;
-    const alegre = si => { contenta = si; pintar(si ? feliz : normal); pj.classList.toggle("feliz", si); };
-    Promise.all([normal.decode(), feliz.decode()]).then(() => {
-      pintar(normal);
-      ensamblar(pj.querySelector(".pj-sprite"), .8, () => {
-        if (calma) return;
-        pj.classList.add("vivo");
-        (function parpadea() {
-          setTimeout(() => {
-            if (!contenta) { pintar(feliz); setTimeout(() => contenta || pintar(normal), 150); }
-            parpadea();
-          }, 2500 + Math.random() * 3500);
-        })();
-      });
-    });
+    ensamblar(pj.querySelector(".pj-sprite"), .8, () => { if (!calma) pj.classList.add("vivo"); });
+    const alegre = si => pj.classList.toggle("feliz", si);
     pj.addEventListener("mouseenter", () => alegre(true));
     pj.addEventListener("mouseleave", () => alegre(false));
     pj.addEventListener("focus", () => alegre(true));
     pj.addEventListener("blur", () => alegre(false));
     pj.addEventListener("pointerdown", e => {
       if (e.pointerType === "mouse") return;
-      alegre(true); setTimeout(() => alegre(false), 1400);
+      alegre(true); setTimeout(() => alegre(false), 1600);
     });
   })();
 
