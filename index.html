@@ -79,7 +79,42 @@
   nav ul a:hover, nav ul a.active { color: var(--teal); }
 
   /* portada */
-  .hero { padding: 110px 0 90px; }
+  .hero { padding: 90px 0 70px; display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center; }
+
+  /* personaje de HUG */
+  .pj { position: relative; margin: 0; display: grid; justify-items: center; gap: 10px; cursor: pointer; outline: none; }
+  .pj::before {
+    content: ""; position: absolute; left: 50%; top: 52%; width: 300px; height: 300px; transform: translate(-50%, -50%); z-index: -1;
+    background: radial-gradient(circle, rgba(167,139,250,.22), rgba(45,212,191,.08) 45%, transparent 70%);
+  }
+  .pj-sprite { --s: 3; position: relative; width: calc(79px * var(--s)); height: calc(128px * var(--s)); }
+  .pj-sprite canvas { width: 100%; height: 100%; image-rendering: pixelated; display: block; }
+  .pj.vivo .pj-sprite canvas { animation: respira 1.2s steps(1) infinite; }
+  @keyframes respira { 50% { transform: translateY(calc(-1px * var(--s))); } }
+  /* sombra pixelada bajo los pies */
+  .pj-sprite::after {
+    content: ""; position: absolute; left: 50%; bottom: calc(-2px * var(--s)); transform: translateX(-50%);
+    width: calc(26px * var(--s)); height: calc(3px * var(--s)); background: rgba(0,0,0,.55);
+    clip-path: polygon(12% 0, 88% 0, 88% 33%, 100% 33%, 100% 66%, 88% 66%, 88% 100%, 12% 100%, 12% 66%, 0 66%, 0 33%, 12% 33%);
+  }
+  /* al pasar el ratón: seleccionada como en el editor de Unity */
+  .pj-sprite::before {
+    content: ""; position: absolute; inset: -8px; opacity: 0; transition: opacity .15s; pointer-events: none;
+    outline: 1.5px solid var(--u-sel);
+    background:
+      linear-gradient(var(--u-sel), var(--u-sel)) top left / 6px 6px no-repeat,
+      linear-gradient(var(--u-sel), var(--u-sel)) top right / 6px 6px no-repeat,
+      linear-gradient(var(--u-sel), var(--u-sel)) bottom left / 6px 6px no-repeat,
+      linear-gradient(var(--u-sel), var(--u-sel)) bottom right / 6px 6px no-repeat;
+  }
+  .pj:hover .pj-sprite::before, .pj:focus-visible .pj-sprite::before { opacity: 1; }
+  .pj-bocadillo {
+    position: absolute; top: 18px; right: 4px; padding: 4px 9px; font-size: 1rem; color: var(--pink);
+    background: var(--card); border: 2px solid var(--line); opacity: 0; transform: translateY(6px); transition: opacity .15s, transform .15s;
+  }
+  .pj:hover .pj-bocadillo, .pj:focus-visible .pj-bocadillo, .pj.feliz .pj-bocadillo { opacity: 1; transform: none; }
+  .pj figcaption { display: flex; align-items: center; gap: 6px; font-size: .72rem; color: var(--muted); }
+  .pj figcaption .ico { color: var(--pink); }
   .tag {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 6px 14px; border: 1px solid var(--line); border-radius: 3px;
@@ -87,7 +122,7 @@
   }
   .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 12px var(--teal); animation: pulse 2s infinite; }
   @keyframes pulse { 50% { opacity: .35; } }
-  .hero h1 { font-size: clamp(2.6rem, 6vw, 4.4rem); line-height: 1.05; margin: 22px 0 18px; letter-spacing: -.02em; }
+  .hero h1 { font-size: clamp(2.4rem, 5vw, 4rem); line-height: 1.05; margin: 22px 0 18px; letter-spacing: -.02em; }
   .grad {
     background: linear-gradient(90deg, var(--teal), var(--cyan) 50%, var(--violet));
     -webkit-background-clip: text; background-clip: text; color: transparent;
@@ -283,7 +318,11 @@
     .u-prop { grid-template-columns: 80px 1fr; padding-left: 8px; }
     .tree .when { display: none; }
     .tree .l2 { padding-left: 48px; }
-    .hero { padding: 70px 0 50px; }
+    .hero { padding: 60px 0 40px; grid-template-columns: 1fr; }
+    .pj { order: -1; justify-self: end; margin-bottom: -20px; }
+    .pj-sprite { --s: 1.5; }
+    .pj::before { width: 160px; height: 160px; }
+    .pj figcaption { display: none; }
   }
   @media (prefers-reduced-motion: reduce) {
     .reveal { opacity: 1; transform: none; transition: none; }
@@ -309,6 +348,7 @@
 </nav>
 
 <header class="hero wrap" id="inicio">
+ <div class="hero-txt">
   <span class="tag mono"><span class="dot"></span> Disponible para mi primer empleo</span>
   <h1>Hola, soy <span class="grad">Hugo Rejas</span>.<br>Desarrollo apps y sueño con videojuegos.</h1>
   <p class="lead">Estudiante de 2º de DAM en Extremadura. Me gusta crear <span class="typed mono" id="typed">apps que resuelven problemas reales</span></p>
@@ -317,6 +357,13 @@
     <a href="https://github.com/PerchaCervantina" class="btn ghost" target="_blank" rel="noopener">GitHub</a>
     <a href="mailto:hugorejfer@gmail.com" class="btn ghost">Escríbeme</a>
   </div>
+ </div>
+  <!-- personaje de HUG en pixel art -->
+  <figure class="pj" id="pj" tabindex="0" aria-label="Personaje de mi videojuego HUG en pixel art">
+    <div class="pj-sprite"><canvas width="79" height="128"></canvas></div>
+    <span class="pj-bocadillo mono" aria-hidden="true">♥</span>
+    <figcaption class="mono"><svg class="ico"><use href="#i-cube"/></svg>HUG · personaje en desarrollo</figcaption>
+  </figure>
 </header>
 
 <main>
@@ -559,15 +606,18 @@
   }
 
   // ===== Títulos que se montan píxel a píxel, subiendo desde abajo =====
-  function ensamblar(el, retraso = 0) {
-    if (calma || el.dataset.montado) return;
+  function ensamblar(el, retraso = 0, alAcabar = () => {}) {
+    if (calma || el.dataset.montado) return alAcabar();
     el.dataset.montado = "1";
     el.style.visibility = "hidden";
     const listas = document.fonts ? document.fonts.ready : Promise.resolve();
     listas.then(() => {
       const base = el.getBoundingClientRect();
       const tam = parseFloat(getComputedStyle(el).fontSize);
-      const paso = Math.max(2, Math.round(tam / 13));       // tamaño de cada píxel
+      const sprite = el.querySelector("canvas");
+      const paso = el.classList.contains("pj-sprite")
+        ? base.width / sprite.width                          // un píxel del sprite
+        : Math.max(2, Math.round(tam / 13));                 // tamaño de cada píxel
       const M = 24, CAIDA = 220;                             // margen y recorrido desde abajo
       const W = Math.ceil(base.width) + M * 2, H = Math.ceil(base.height) + M * 2 + CAIDA;
 
@@ -575,6 +625,10 @@
       const fuente = document.createElement("canvas");
       fuente.width = W; fuente.height = H;
       const f = fuente.getContext("2d");
+      if (el.classList.contains("pj-sprite")) {
+        f.imageSmoothingEnabled = false;
+        f.drawImage(sprite, M, M, base.width, base.height);
+      }
       const nodos = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
       const rango = document.createRange();
       for (let n; (n = nodos.nextNode());) {
@@ -600,7 +654,7 @@
       // 2) lo convertimos en píxeles gordos que vuelan a su sitio
       const datos = f.getImageData(0, 0, W, H).data, piezas = [];
       for (let y = 0; y < H; y += paso) for (let x = 0; x < W; x += paso) {
-        const k = ((y + (paso >> 1)) * W + x + (paso >> 1)) * 4;
+        const k = (Math.floor(y + paso / 2) * W + Math.floor(x + paso / 2)) * 4;
         if (datos[k + 3] > 110) piezas.push({
           tx: x, ty: y, col: `rgb(${datos[k]},${datos[k + 1]},${datos[k + 2]})`,
           sx: x + (Math.random() - .5) * 60, sy: H - Math.random() * CAIDA * .6,
@@ -636,10 +690,43 @@
         el.style.visibility = "";
         cv.style.transition = "opacity .35s"; cv.style.opacity = "0";
         setTimeout(() => cv.remove(), 400);
+        alAcabar();
       })(performance.now());
     });
   }
   ensamblar(document.querySelector(".hero h1"), .15);
+
+  // ===== Personaje de HUG: se monta píxel a píxel, respira, parpadea y sonríe al pasar el ratón =====
+  (() => {
+    const pj = document.getElementById("pj");
+    const cv = pj.querySelector("canvas"), c = cv.getContext("2d");
+    const normal = new Image(), feliz = new Image();
+    normal.src = "img/hug-bufona.png"; feliz.src = "img/hug-bufona-feliz.png";
+    const pintar = img => { c.clearRect(0, 0, cv.width, cv.height); c.drawImage(img, 0, 0); };
+    let contenta = false;
+    const alegre = si => { contenta = si; pintar(si ? feliz : normal); pj.classList.toggle("feliz", si); };
+    Promise.all([normal.decode(), feliz.decode()]).then(() => {
+      pintar(normal);
+      ensamblar(pj.querySelector(".pj-sprite"), .8, () => {
+        if (calma) return;
+        pj.classList.add("vivo");
+        (function parpadea() {
+          setTimeout(() => {
+            if (!contenta) { pintar(feliz); setTimeout(() => contenta || pintar(normal), 150); }
+            parpadea();
+          }, 2500 + Math.random() * 3500);
+        })();
+      });
+    });
+    pj.addEventListener("mouseenter", () => alegre(true));
+    pj.addEventListener("mouseleave", () => alegre(false));
+    pj.addEventListener("focus", () => alegre(true));
+    pj.addEventListener("blur", () => alegre(false));
+    pj.addEventListener("pointerdown", e => {
+      if (e.pointerType === "mouse") return;
+      alegre(true); setTimeout(() => alegre(false), 1400);
+    });
+  })();
 
   // aparición de secciones y enlace activo del menú
   const io = new IntersectionObserver(entries => {
