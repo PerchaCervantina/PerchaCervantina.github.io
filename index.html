@@ -5,10 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hugo Rejas Fernández · Desarrollador de aplicaciones</title>
 <meta name="description" content="Portfolio de Hugo Rejas Fernández, estudiante de 2º de DAM. Apps Android, Java, Kotlin y SQL. Aprendiendo C# para crear videojuegos.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="preload" href="fonts/pixelify-sans-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/pixelify-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+  /* fuentes pixeladas (OFL), alojadas en el propio repo */
+  @font-face { font-family: "Pixelify Sans"; src: url(fonts/pixelify-sans-latin-400-normal.woff2) format("woff2"); font-weight: 400; font-display: swap; }
+  @font-face { font-family: "Pixelify Sans"; src: url(fonts/pixelify-sans-latin-600-normal.woff2) format("woff2"); font-weight: 600; font-display: swap; }
+  @font-face { font-family: "Pixelify Sans"; src: url(fonts/pixelify-sans-latin-700-normal.woff2) format("woff2"); font-weight: 700; font-display: swap; }
+  @font-face { font-family: "Silkscreen"; src: url(fonts/silkscreen-latin-400-normal.woff2) format("woff2"); font-weight: 400; font-display: swap; }
   :root {
     --bg: #07090b;
     --bg-2: #0d1215;
@@ -31,14 +35,16 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body {
-    font-family: "Space Grotesk", system-ui, sans-serif;
+    font-family: "Pixelify Sans", system-ui, sans-serif;
+    font-size: 17px; -webkit-font-smoothing: none; font-smooth: never;
     background: var(--bg);
     color: var(--text);
     line-height: 1.6;
     overflow-x: hidden;
   }
   a { color: inherit; text-decoration: none; }
-  .mono { font-family: "JetBrains Mono", monospace; }
+  .mono { font-family: "Silkscreen", monospace; letter-spacing: -.02em; }
+  h1, h2, h3, .logo, .btn { font-weight: 700; }
   .wrap { width: min(1100px, 92%); margin: 0 auto; }
 
   /* fondo con brillo */
@@ -91,7 +97,7 @@
   .actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
   .btn {
     display: inline-flex; align-items: center; gap: 8px;
-    padding: 12px 22px; border-radius: 4px; font-weight: 500; transition: transform .2s, box-shadow .2s, border-color .2s;
+    padding: 12px 22px; border-radius: 4px; font-weight: 600; transition: transform .2s, box-shadow .2s, border-color .2s;
   }
   .btn.primary { background: var(--teal); color: #031312; }
   .btn.primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(45,212,191,.3); }
@@ -105,7 +111,7 @@
 
   .about { display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; align-items: start; }
   .about p { color: var(--muted); margin-bottom: 16px; font-size: 1.05rem; }
-  .about p strong { color: var(--text); font-weight: 500; }
+  .about p strong { color: var(--text); font-weight: 600; }
 
   /* ===== Ventanas al estilo del editor de Unity ===== */
   .ico { width: 14px; height: 14px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
@@ -145,7 +151,7 @@
   /* inspector: componente */
   .u-comp { border-top: 1px solid var(--line); }
   .u-comp-h {
-    display: flex; align-items: center; gap: 8px; padding: 7px 8px; font-size: .88rem; font-weight: 500;
+    display: flex; align-items: center; gap: 8px; padding: 7px 8px; font-size: .88rem; font-weight: 600;
     background: var(--u-head); border-bottom: 1px solid var(--line);
   }
   .u-comp-h .ico { color: var(--c, var(--teal)); }
@@ -205,7 +211,7 @@
   .project p { color: var(--muted); font-size: .95rem; flex: 1; }
   .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0; }
   .chip { font-size: .78rem; padding: 3px 9px; border-radius: 2px; background: rgba(45,212,191,.08); color: var(--teal); border: 1px solid rgba(45,212,191,.2); }
-  .project a.link { color: var(--c); font-weight: 500; font-size: .95rem; }
+  .project a.link { color: var(--c); font-weight: 600; font-size: .95rem; }
   .project a.link:hover { text-decoration: underline; }
   .links { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
   .btn-apk {
@@ -221,9 +227,9 @@
   .tree { list-style: none; padding: 6px 0 10px; }
   .tree li { display: flex; align-items: center; gap: 7px; padding: 5px 12px; font-size: .95rem; }
   .tree li .ico { color: var(--muted); }
-  .tree .root { font-weight: 500; background: var(--u-head); border-bottom: 1px solid var(--line); margin-bottom: 4px; }
+  .tree .root { font-weight: 600; background: var(--u-head); border-bottom: 1px solid var(--line); margin-bottom: 4px; }
   .tree .root .ico { color: var(--text); }
-  .tree .l1 { padding-left: 30px; font-weight: 500; }
+  .tree .l1 { padding-left: 30px; font-weight: 600; }
   .tree .l1 .ico { color: var(--cyan); }
   .tree .l2 { padding-left: 64px; color: var(--muted); font-size: .9rem; }
   .tree .on { background: rgba(45,212,191,.16); box-shadow: inset 2px 0 0 var(--teal); }
@@ -231,7 +237,7 @@
 
   /* qué busco: ventana Project con assets */
   .u-crumbs { padding: 8px 14px; border-bottom: 1px solid var(--line); font-size: .78rem; color: var(--muted); }
-  .u-crumbs b { color: var(--text); font-weight: 500; }
+  .u-crumbs b { color: var(--text); font-weight: 600; }
   .goals { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; padding: 16px; }
   .goal { position: relative; background: var(--bg-2); border: 1px solid var(--line); padding: 22px; transition: border-color .2s; }
   .goal::after {
@@ -552,9 +558,97 @@
     setTimeout(tick, 2500);
   }
 
+  // ===== Títulos que se montan píxel a píxel, subiendo desde abajo =====
+  function ensamblar(el, retraso = 0) {
+    if (calma || el.dataset.montado) return;
+    el.dataset.montado = "1";
+    el.style.visibility = "hidden";
+    const listas = document.fonts ? document.fonts.ready : Promise.resolve();
+    listas.then(() => {
+      const base = el.getBoundingClientRect();
+      const tam = parseFloat(getComputedStyle(el).fontSize);
+      const paso = Math.max(2, Math.round(tam / 13));       // tamaño de cada píxel
+      const M = 24, CAIDA = 220;                             // margen y recorrido desde abajo
+      const W = Math.ceil(base.width) + M * 2, H = Math.ceil(base.height) + M * 2 + CAIDA;
+
+      // 1) pintamos el texto tal y como está maquetado, letra a letra
+      const fuente = document.createElement("canvas");
+      fuente.width = W; fuente.height = H;
+      const f = fuente.getContext("2d");
+      const nodos = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      const rango = document.createRange();
+      for (let n; (n = nodos.nextNode());) {
+        const padre = n.parentElement, cs = getComputedStyle(padre);
+        f.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+        const asc = f.measureText("Hg").fontBoundingBoxAscent || parseFloat(cs.fontSize) * .8;
+        let relleno = cs.color;
+        if (padre.classList.contains("grad")) {
+          const pr = padre.getBoundingClientRect();
+          const g = f.createLinearGradient(pr.left - base.left + M, 0, pr.right - base.left + M, 0);
+          g.addColorStop(0, "#2dd4bf"); g.addColorStop(.5, "#22d3ee"); g.addColorStop(1, "#a78bfa");
+          relleno = g;
+        }
+        f.fillStyle = relleno;
+        for (let i = 0; i < n.length; i++) {
+          if (!n.data[i].trim()) continue;
+          rango.setStart(n, i); rango.setEnd(n, i + 1);
+          const r = rango.getClientRects()[0];
+          if (r) f.fillText(n.data[i], r.left - base.left + M, r.top - base.top + M + asc);
+        }
+      }
+
+      // 2) lo convertimos en píxeles gordos que vuelan a su sitio
+      const datos = f.getImageData(0, 0, W, H).data, piezas = [];
+      for (let y = 0; y < H; y += paso) for (let x = 0; x < W; x += paso) {
+        const k = ((y + (paso >> 1)) * W + x + (paso >> 1)) * 4;
+        if (datos[k + 3] > 110) piezas.push({
+          tx: x, ty: y, col: `rgb(${datos[k]},${datos[k + 1]},${datos[k + 2]})`,
+          sx: x + (Math.random() - .5) * 60, sy: H - Math.random() * CAIDA * .6,
+          t0: retraso + x / W * .45 + Math.random() * .35, dur: .45 + Math.random() * .4
+        });
+      }
+      const cv = document.createElement("canvas"), dpr = Math.min(2, devicePixelRatio || 1);
+      cv.width = W * dpr; cv.height = H * dpr;
+      cv.style.cssText = `position:absolute;left:${-M}px;top:${-M}px;width:${W}px;height:${H}px;pointer-events:none;z-index:2;visibility:visible`;
+      el.style.position = "relative";
+      el.appendChild(cv);
+      const c = cv.getContext("2d"); c.scale(dpr, dpr);
+      const fin = Math.max(...piezas.map(p => p.t0 + p.dur), 0) + .05;
+      const sube = t => 1 - Math.pow(1 - t, 3);
+      let inicio = null;
+      (function cuadro(ms) {
+        if (inicio === null) inicio = ms;
+        const t = (ms - inicio) / 1000;
+        c.clearRect(0, 0, W, H);
+        for (const p of piezas) {
+          const u = (t - p.t0) / p.dur;
+          if (u <= 0) continue;
+          const e = sube(Math.min(1, u));
+          // saltitos de píxel en píxel, como un sprite
+          const x = Math.round((p.sx + (p.tx - p.sx) * e) / paso) * paso;
+          const y = Math.round((p.sy + (p.ty - p.sy) * e) / paso) * paso;
+          c.globalAlpha = Math.min(1, u * 3);
+          c.fillStyle = u < 1 && u > .85 ? "#ffffff" : p.col;
+          c.fillRect(x, y, paso, paso);
+        }
+        if (t < fin) return requestAnimationFrame(cuadro);
+        // 3) cambiamos los píxeles por el texto real
+        el.style.visibility = "";
+        cv.style.transition = "opacity .35s"; cv.style.opacity = "0";
+        setTimeout(() => cv.remove(), 400);
+      })(performance.now());
+    });
+  }
+  ensamblar(document.querySelector(".hero h1"), .15);
+
   // aparición de secciones y enlace activo del menú
   const io = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("show"); });
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add("show");
+      const t = e.target.querySelector("h2");
+      if (t) ensamblar(t, .1);
+    });
   }, { threshold: 0.12 });
   document.querySelectorAll(".reveal").forEach(s => io.observe(s));
 
